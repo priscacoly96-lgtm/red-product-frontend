@@ -18,7 +18,7 @@ function Register() {
     setSuccess('');
     setLoading(true);
 
-   .post(`${API_URL}/api/register/`, {
+   axios.post(`${API_URL}/api/register/`, {
       username: username,
       email: email,
       password: password,
