@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
-import { API_URL } from '../services/api'; 
+import { API_URL } from '../services/api';
+import { FiEye, FiEyeOff } from 'react-icons/fi';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -9,6 +10,7 @@ function Login() {
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
@@ -85,27 +87,43 @@ function Login() {
           {/* Email Input */}
           <div className="mb-4">
             <input
-  type="text"
-  className="form-control border-0 border-bottom rounded-0 px-0 shadow-none"
-  placeholder="E-mail ou nom d'utilisateur"
-  style={{ fontSize: '14px', borderColor: '#e5e7eb' }}
-  value={email}
-  onChange={(e) => setEmail(e.target.value)}
-  required
-/>
+              type="text"
+              className="form-control border-0 border-bottom rounded-0 px-0 shadow-none"
+              placeholder="E-mail ou nom d'utilisateur"
+              style={{ fontSize: '14px', borderColor: '#e5e7eb' }}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
           </div>
 
           {/* Password Input */}
           <div className="mb-4">
-            <input
-              type="password"
-              className="form-control border-0 border-bottom rounded-0 px-0 shadow-none"
-              placeholder="Mot de passe"
-              style={{ fontSize: '14px', borderColor: '#e5e7eb' }}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+            <div className="position-relative">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                className="form-control border-0 border-bottom rounded-0 px-0 shadow-none"
+                placeholder="Mot de passe"
+                style={{ fontSize: '14px', borderColor: '#e5e7eb', paddingRight: '28px' }}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              <span
+                onClick={() => setShowPassword(!showPassword)}
+                style={{
+                  position: 'absolute',
+                  right: '0px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  cursor: 'pointer',
+                  color: '#6b7280',
+                  fontSize: '18px',
+                }}
+              >
+                {showPassword ? <FiEyeOff /> : <FiEye />}
+              </span>
+            </div>
           </div>
 
           {/* Remember Me Checkbox */}
