@@ -11,6 +11,8 @@ function HotelList() {
   const [editingHotelId, setEditingHotelId] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+    const [showDetailModal, setShowDetailModal] = useState(false);
+  const [selectedHotel, setSelectedHotel] = useState(null);
   
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
@@ -113,6 +115,10 @@ function HotelList() {
     setShowModal(true);
   };
 
+    const handleHotelClick = (hotel) => {
+    setSelectedHotel(hotel);
+    setShowDetailModal(true);
+  };
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
@@ -331,7 +337,11 @@ function HotelList() {
           <div className="row g-3">
             {hotels.map((hotel) => (
               <div className="col-12 col-sm-6 col-md-4 col-lg-3" key={hotel.id}>
-                <div className="card border-0 shadow-sm h-100 bg-white" style={{ borderRadius: '12px', overflow: 'hidden' }}>
+                                <div
+                  className="card border-0 shadow-sm h-100 bg-white"
+                  style={{ borderRadius: '12px', overflow: 'hidden', cursor: 'pointer' }}
+                  onClick={() => handleHotelClick(hotel)}
+                >
                   
                   <img
                     src={hotel.image || "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=500&auto=format&fit=crop&q=60"}
@@ -372,7 +382,76 @@ function HotelList() {
           </div>
         </main>
       </div>
+      {/* MODAL DETAILS HOTEL */}
+      {showDetailModal && selectedHotel && (
+        <div
+          className="position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
+          style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)', zIndex: 1050 }}
+        >
+          <div
+            className="bg-white p-3 p-md-4 rounded shadow-lg position-relative"
+            style={{ width: '95%', maxWidth: '560px', maxHeight: '90vh', overflowY: 'auto' }}
+          >
+            <div className="d-flex align-items-center gap-2 mb-3 pb-2 border-bottom border-dashed">
+              <button
+                onClick={() => setShowDetailModal(false)}
+                className="btn btn-link text-dark p-0 text-decoration-none fs-5 fw-bold"
+              >
+                ←
+              </button>
+              <h6 className="fw-bold mb-0 text-uppercase text-secondary" style={{ fontSize: '13px', letterSpacing: '0.5px' }}>
+                Détails de l'hôtel
+              </h6>
+            </div>
 
+            <img
+              src={selectedHotel.image || "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=500&auto=format&fit=crop&q=60"}
+              alt={selectedHotel.name}
+              style={{ width: '100%', height: '220px', objectFit: 'cover', borderRadius: '8px' }}
+              className="mb-3"
+            />
+
+            <h5 className="fw-bold mb-1">{selectedHotel.name}</h5>
+            <p className="text-danger small mb-3">{selectedHotel.address || 'Adresse non renseignée'}</p>
+
+            <div className="row g-3 mb-3">
+              <div className="col-md-6">
+                <span className="text-muted small d-block" style={{ fontSize: '12px' }}>E-mail</span>
+                <span className="fw-medium">{selectedHotel.email || 'Non renseigné'}</span>
+              </div>
+              <div className="col-md-6">
+                <span className="text-muted small d-block" style={{ fontSize: '12px' }}>Téléphone</span>
+                <span className="fw-medium">{selectedHotel.phone || 'Non renseigné'}</span>
+              </div>
+              <div className="col-md-6">
+                <span className="text-muted small d-block" style={{ fontSize: '12px' }}>Prix par nuit</span>
+                <span className="fw-medium">{selectedHotel.price_per_night} {selectedHotel.currency || 'XOF'}</span>
+              </div>
+            </div>
+
+            {selectedHotel.description && (
+              <div className="mb-3">
+                <span className="text-muted small d-block mb-1" style={{ fontSize: '12px' }}>Description</span>
+                <p className="mb-0">{selectedHotel.description}</p>
+              </div>
+            )}
+
+            <div className="d-flex justify-content-end gap-2 mt-4">
+              <button
+                onClick={() => {
+                  setShowDetailModal(false);
+                  handleEditClick(selectedHotel);
+                }}
+                className="btn btn-outline-dark px-4 py-2"
+                style={{ borderRadius: '6px', fontSize: '13px' }}
+              >
+                Modifier
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      
       {/* MODAL CREER / MODIFIER UN HOTEL */}
       {showModal && (
         <div
